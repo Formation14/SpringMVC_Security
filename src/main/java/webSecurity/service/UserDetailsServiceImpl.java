@@ -1,6 +1,6 @@
-package jm.security.example.service;
+package webSecurity.service;
 
-import jm.security.example.dao.UserDao;
+import webSecurity.dao.UserDao;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

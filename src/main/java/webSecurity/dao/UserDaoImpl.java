@@ -1,7 +1,7 @@
-package jm.security.example.dao;
+package webSecurity.dao;
 
-import jm.security.example.model.Role;
-import jm.security.example.model.User;
+import webSecurity.model.Role;
+import webSecurity.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;

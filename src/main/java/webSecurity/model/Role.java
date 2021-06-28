@@ -1,4 +1,4 @@
-package jm.security.example.model;
+package webSecurity.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
