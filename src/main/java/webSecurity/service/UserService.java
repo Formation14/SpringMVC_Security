@@ -1,10 +1,10 @@
-package webSecurity.dao;
+package webSecurity.service;
 
 import webSecurity.model.User;
 
 import java.util.List;
 
-public interface UserDao {
+public interface UserService{
     User getUserByName(String name);
     List<User> getAllUsers();
     User getUser(int id);

@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import webSecurity.model.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -19,6 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     // Для создания UserDetails используется интерфейс UserDetailsService, с единственным методом:
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userDao.getUserByName(s);
+        User user = userDao.getUserByName(s);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),user.getAuthorities());
     }
 }
