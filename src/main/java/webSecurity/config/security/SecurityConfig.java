@@ -10,16 +10,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import webSecurity.config.handler.LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
-    private final SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
 
-    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, SuccessUserHandler successUserHandler) {
+    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
+    private final LoginSuccessHandler loginSuccessHandler; // класс, в котором описана логика перенаправления пользователей по ролям
+
+    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, LoginSuccessHandler loginSuccessHandler) {
         this.userDetailsService = userDetailsService;
-        this.successUserHandler = successUserHandler;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     @Autowired
@@ -31,10 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/user").access("hasAnyRole('USER')")
-                .antMatchers("/admin").access("hasAnyRole('ADMIN')")// разрешаем входить на /user пользователям с ролью User
+                .antMatchers("/user").access("hasAnyRole('USER','ADMIN')")// разрешаем входить на /admin пользователям с ролью User
+                .antMatchers("/admin").access("hasRole('ADMIN')")// разрешаем входить на /user пользователям с ролью User
+                .anyRequest()
+                .authenticated()
                 .and().formLogin()  // Spring сам подставит свою логин форму
-                .successHandler(successUserHandler); // подключаем наш SuccessHandler для перенеправления по ролям
+                .successHandler(loginSuccessHandler); // подключаем наш SuccessHandler для перенеправления по ролям
     }
 
     // Необходимо для шифрования паролей

@@ -3,14 +3,11 @@ package webSecurity.dao;
 import webSecurity.model.Role;
 import webSecurity.model.User;
 import org.springframework.stereotype.Repository;
-import webSecurity.service.RoleService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -20,14 +17,12 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public User getUserByName(String name) {
         return entityManager.find(User.class, name);
 
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Role showRole(int id) {
         TypedQuery<Role> typedQuery = entityManager.createQuery("SELECT r FROM Role r where r.id = :id", Role.class);
         return typedQuery.getSingleResult();
@@ -37,7 +32,7 @@ public class UserDaoImpl implements UserDao {
     public void update(User user, String[] role) {
         Set<Role> rol = new HashSet<>();
         for (String s : role) {
-            if (s.equals("ROLE_ADMIN")) {
+            if (s.equals("ADMIN")) {
                 rol.add(showRole(1));
             } else {
                 rol.add(showRole(2));
@@ -68,8 +63,4 @@ public class UserDaoImpl implements UserDao {
         entityManager.remove(user);
     }
 
-    @Override
-    public void update(User user) {
-        entityManager.merge(user);
-    }
 }

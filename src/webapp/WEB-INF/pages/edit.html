@@ -7,15 +7,25 @@
 <body>
 <p>Edit user</p>
 <br/>
-<form th:method="PATCH" th:action="@{/admin/{id}/edit(id=${user.getId()})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/{id}/edit(id=${user.getId()})}" th:object="${user}">
   <label for="name">Enter name: </label>
-  <input type="text" th:field="*{name}" id="name" />
+  <input type="text" th:field="*{username}" id="name" />
   <br/>
   <br/>
   <label for="lastname">Enter lastname: </label>
   <input type="text" th:field="*{password}" id="lastname" />
   <br/>
-
+  <br/>
+  <label for="role">Enter role: </label>
+  <input type="text" th:field="*{roles}" id="role" />
+  <br/>
+  <label>Role:
+    <select multiple size="2" name="select_roles" class="form-control" id="exampleFormControlSelect3">
+      <option th:each="role : ${allRoles}" th:value="${role.getRole()}"
+              th:text="${role.getAuthority() == 'ADMIN'} ? 'ADMIN' : 'USER'"></option>
+    </select>
+    <br/>
+  </label>
   <input type="submit" value="Update user">
 </form>
 <br/>

@@ -5,19 +5,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import webSecurity.dao.UserDao;
 import webSecurity.model.User;
+import webSecurity.service.RoleService;
 import webSecurity.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
 
 
     @GetMapping(value = "/admin")
@@ -44,16 +47,18 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/{id}/edit")
-    public String editUser(Model model,
-                           @PathVariable("id") Integer id) {
-        model.addAttribute("user", userService.getUser(id));
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") Integer id, ModelMap modelMap) {
+        modelMap.addAttribute("user", userService.getUser(id));
+        modelMap.addAttribute("allRoles", roleService.getAllRoles());
         return "edit";
     }
 
-    @PatchMapping("admin/{id}")
-    public String update(@ModelAttribute("user") User user) {
-        userService.update(user);
+    @PatchMapping(value = "/{id}")
+    public String update(@ModelAttribute("user") User user,
+                         @RequestParam(value = "select_roles", required = false) String[] role) {
+
+        userService.update(user, role);
         return "redirect:/admin";
     }
 

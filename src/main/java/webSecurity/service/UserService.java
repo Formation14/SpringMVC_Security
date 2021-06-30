@@ -9,5 +9,5 @@ public interface UserService{
     User getUser(int id);
     void addUser(User user);
     void deleteUser(User user);
-    void update(User user);
+    void update(User user, String[] role);
 }

@@ -16,14 +16,14 @@
     <th:block th:each="user : ${users}">
         <tr>
             <td th:text="${user.id}"></td>
-            <td th:text="${user.name}"></td>
+            <td th:text="${user.username}"></td>
             <td th:text="${user.password}"></td>
             <td>
                 <form th:action="@{/admin/{id}/edit(id=${user.getId()})}">
                 <input type="submit" value="Edit"/>
                 </form>
                 <form th:method="DELETE"
-                      th:action="@{/admin/{id}(id=${user.getId()})}">
+                      th:action="@{{id}(id=${user.getId()})}">
                     <input type="submit" value="Delete"/>
                 </form>
             </td>
@@ -35,5 +35,8 @@
 <form th:action="@{/admin/adduser}">
     <input type="submit" value="CREATE USER"/>
 </form>
+<div >
+    <a href="http://localhost:8088/login">Exit</a>
+</div>
 </body>
 </html>

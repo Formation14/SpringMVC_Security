@@ -3,43 +3,44 @@ package webSecurity.model;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_role")
+@Table(name = "role")
 public class Role implements GrantedAuthority {
     @Id
-    private Long id;
-    private String name;
-    @Transient
+    @Column(name = "role_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "role")
+    private String role;
+
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
+
     public Role() {
     }
 
-    public Role(Long id) {
-        this.id = id;
+    public Role(String role) {
+        this.role = role;
     }
 
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Set<User> getUsers() {
@@ -52,6 +53,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return getName();
+        return role;
     }
 }
