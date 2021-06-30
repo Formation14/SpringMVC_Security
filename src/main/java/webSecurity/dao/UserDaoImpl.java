@@ -3,45 +3,73 @@ package webSecurity.dao;
 import webSecurity.model.Role;
 import webSecurity.model.User;
 import org.springframework.stereotype.Repository;
+import webSecurity.service.RoleService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-    private  List <User> userList = Stream.of(new User(1L, "test", "test", Collections.singleton(new Role(1L, "ROLE_USER")))).collect(Collectors.toList());
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
 
     @Override
+    @SuppressWarnings("unchecked")
     public User getUserByName(String name) {
-        return userList.stream().filter(user -> user.getName().equals(name)).findFirst().orElse(null);
+        return entityManager.find(User.class, name);
+
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Role showRole(int id) {
+        TypedQuery<Role> typedQuery = entityManager.createQuery("SELECT r FROM Role r where r.id = :id", Role.class);
+        return typedQuery.getSingleResult();
+    }
+
+    @Override
+    public void update(User user, String[] role) {
+        Set<Role> rol = new HashSet<>();
+        for (String s : role) {
+            if (s.equals("ROLE_ADMIN")) {
+                rol.add(showRole(1));
+            } else {
+                rol.add(showRole(2));
+            }
+        }
+        user.setRoles(rol);
+        entityManager.merge(user);
+
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userList;
+        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
     @Override
     public User getUser(int id) {
-        return null;
+        return entityManager.find(User.class, id);
     }
 
     @Override
     public void addUser(User user) {
-
+        entityManager.persist(user);
     }
 
     @Override
     public void deleteUser(User user) {
-
+        entityManager.remove(user);
     }
 
     @Override
     public void update(User user) {
-
+        entityManager.merge(user);
     }
 }
-

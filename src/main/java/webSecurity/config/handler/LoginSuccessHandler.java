@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
-public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
-                                        HttpServletResponse httpServletResponse,
-                                        Authentication authentication) throws IOException, ServletException {
-        httpServletResponse.sendRedirect("/hello");
-    }
-}
+//@Component
+//public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+//
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
+//                                        HttpServletResponse httpServletResponse,
+//                                        Authentication authentication) throws IOException, ServletException {
+//        httpServletResponse.sendRedirect("/hello");
+//    }
+//}

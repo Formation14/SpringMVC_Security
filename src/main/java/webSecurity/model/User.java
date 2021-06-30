@@ -3,26 +3,27 @@ package webSecurity.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
-// Для того, чтобы в дальнейшим использовать класс User в Spring Security, он должен реализовывать интерфейс UserDetails.
-// UserDetails можно представить, как адаптер между БД пользователей и тем что требуется Spring Security внутри SecurityContextHolder
+@Entity
+@Table(name = "users")
 public class User implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name; // уникальное значение
+    @Size(min=2, message = "Не меньше 5 знаков")
+    private String username;
+    @Size(min=2, message = "Не меньше 5 знаков")
     private String password;
+    @Transient
+    private String passwordConfirm;
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     public User() {
-
-    }
-
-    public User(Long id, String name, String password, Set<Role> roles) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.roles = roles;
     }
 
     public Long getId() {
@@ -33,28 +34,9 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
     @Override
     public String getUsername() {
-        return name;
+        return username;
     }
 
     @Override
@@ -77,8 +59,30 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
     public Set<Role> getRoles() {
@@ -87,15 +91,5 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles +
-                '}';
     }
 }
