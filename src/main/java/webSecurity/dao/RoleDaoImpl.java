@@ -1,20 +1,20 @@
 package webSecurity.dao;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import webSecurity.model.Role;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Component
+@Repository
 public class RoleDaoImpl implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public List<Role> getAllRoles() {
-        return entityManager.createQuery("select r from Role r", Role.class).getResultList();
+        return entityManager.createQuery("select r from Role r ", Role.class).getResultList();
     }
 
 }

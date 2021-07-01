@@ -1,8 +1,8 @@
 package webSecurity.dao;
 
+import org.springframework.stereotype.Repository;
 import webSecurity.model.Role;
 import webSecurity.model.User;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,13 +18,16 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByName(String name) {
-        return entityManager.find(User.class, name);
+        return entityManager.createQuery("select u from User u where u.name = :user_name", User.class)
+                .setParameter("user_name", name)
+                .setMaxResults(1)
+                .getSingleResult();
 
     }
 
     @Override
     public Role showRole(int id) {
-        TypedQuery<Role> typedQuery = entityManager.createQuery("SELECT r FROM Role r where r.id = :id", Role.class);
+        TypedQuery<Role> typedQuery = entityManager.createQuery("select r from Role r where r.id = :id", Role.class);
         return typedQuery.getSingleResult();
     }
 
@@ -45,12 +48,15 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
+        return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
     public User getUser(int id) {
-        return entityManager.find(User.class, id);
+        TypedQuery<User> q = entityManager.createQuery(
+                "select u from User u where u.id = :id", User.class);
+        q.setParameter("id", id);
+        return q.getResultList().stream().findAny().orElse(null);
     }
 
     @Override

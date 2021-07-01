@@ -8,16 +8,15 @@ import java.util.Set;
 
 @Entity
 @Table(name = "role")
-public class Role implements GrantedAuthority {
+public class Role implements GrantedAuthority{
+
     @Id
-    @Column(name = "role_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "role")
     private String role;
-
     @ManyToMany(mappedBy = "roles")
+
     private Set<User> users = new HashSet<>();
 
     public Role() {
@@ -53,6 +52,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return role;
+        return getRole();
     }
 }

@@ -10,21 +10,21 @@
     <tr>
         <th>User id</th>
         <th>User name</th>
-        <th>User lastname</th>
+        <th>password</th>
+        <th>User email</th>
+        <th>Role</th>
         <th>Operations</th>
     </tr>
     <th:block th:each="user : ${users}">
         <tr>
             <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.password}"></td>
+            <td th:text="${user.name}"/>
+            <td th:text="${user.password}"/>
+            <td th:text="${user.email}"/>
+            <td th:text="${user.roles}"/>
             <td>
-                <form th:action="@{/admin/{id}/edit(id=${user.getId()})}">
+                <form th:action="@{creat/{id}/edit(id=${user.getId()})}">
                 <input type="submit" value="Edit"/>
-                </form>
-                <form th:method="DELETE"
-                      th:action="@{{id}(id=${user.getId()})}">
-                    <input type="submit" value="Delete"/>
                 </form>
             </td>
 
@@ -32,11 +32,11 @@
     </th:block>
 </table>
 <br/>
-<form th:action="@{/admin/adduser}">
+<form th:action="@{/creat/adduser}">
     <input type="submit" value="CREATE USER"/>
 </form>
-<div >
-    <a href="http://localhost:8088/login">Exit</a>
-</div>
+<form th:action="@{/login}">
+    <input type="submit" value="MOVE LOGIN PAGE"/>
+</form>
 </body>
 </html>
