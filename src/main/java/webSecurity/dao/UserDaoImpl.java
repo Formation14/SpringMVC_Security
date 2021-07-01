@@ -32,16 +32,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void update(User user, String[] role) {
-        Set<Role> rol = new HashSet<>();
-        for (String s : role) {
-            if (s.equals("ADMIN")) {
-                rol.add(showRole(1));
-            } else {
-                rol.add(showRole(2));
-            }
-        }
-        user.setRoles(rol);
+    public void update(Integer id, User user) {
         entityManager.merge(user);
 
     }

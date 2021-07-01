@@ -7,7 +7,7 @@
 <body>
 <p>Create new user</p>
 <br/>
-<form th:method="POST" th:action="@{/creat}" th:object="${user}">
+<form th:method="POST" th:action="@{/}" th:object="${user}">
   <label for="name">Enter name: </label>
   <input type="text" th:field="*{name}" id="name" />
   <br/>
@@ -20,7 +20,7 @@
   <input type="text" th:field="*{email}" id="email" />
   <br/>
   <label>Role:
-    <select multiple size="2" name="Role" class="form-control" id="exampleFormControlSelect3">
+    <select multiple size="2" name="chooseRole">
       <option th:each="role : ${roles}" th:value="${role.getRole()}"
               th:text="${role.getAuthority() == 'ADMIN'} ? 'ADMIN' : 'USER'"></option>
     </select>

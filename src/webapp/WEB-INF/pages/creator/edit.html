@@ -20,7 +20,7 @@
   <input type="text" th:field="*{email}" id="email" />
   <br/>
   <label>Role:
-    <select multiple size="2" name="roles">
+    <select multiple size="2" name="chooseRole">
       <option th:each="role : ${roles}" th:value="${role.getRole()}"
               th:text="${role.getAuthority() == 'ADMIN'} ? 'ADMIN' : 'USER'"></option>
     </select>

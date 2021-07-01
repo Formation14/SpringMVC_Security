@@ -2,15 +2,16 @@ package webSecurity.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import webSecurity.model.Role;
 import webSecurity.model.User;
 import webSecurity.service.RoleService;
 import webSecurity.service.UserService;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,6 @@ import java.util.Set;
 @Controller
 @RequestMapping("/creat")
 public class CreatorController {
-
 
     @Autowired
     private UserService userService;
@@ -42,40 +42,21 @@ public class CreatorController {
     @GetMapping(value = "/adduser")
     public String addUser(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("roles", roleService.getAllDefRoles());
         return "creator/adduser";
     }
 
-
-//    @RequestMapping(value = "/creat", method = RequestMethod.POST)
-//    public String addUserBd(@ModelAttribute("user") User user,
-//                            @RequestParam(value = "roles", required = false) String[] role) {
-//        Set<Role> rol = new HashSet<>();
-//        for (String s : role) {
-//            if (s.equals("ADMIN")) {
-//                rol.add(roleService.getAllRoles().get(0));
-//            } else if (s.equals("USER")) {
-//                rol.add(roleService.getAllRoles().get(1));
-//            }
-//        }
-//
-//        user.setRoles(rol);
-//        userService.addUser(user);
-//        return "redirect:/creat/users";
-//    }
-    @Transactional
-    @RequestMapping(value = "/creat", method = RequestMethod.POST)
-    public String saveUser(@ModelAttribute("user") User user,
-                           @RequestParam(value = "roles", required = false) String[] role) {
+    @PostMapping("/creat")
+    public String create(@ModelAttribute("user") @Valid User user,
+                         @RequestParam("chooseRole") String[] role) {
         Set<Role> rol = new HashSet<>();
         for (String s : role) {
             if (s.equals("ADMIN")) {
-                rol.add(roleService.getAllRoles().get(0));
+                rol.add(roleService.getAdminRole());
             } else if (s.equals("USER")) {
-                rol.add(roleService.getAllRoles().get(1));
+                rol.add(roleService.getUserRole());
             }
         }
-
         user.setRoles(rol);
         userService.addUser(user);
         return "redirect:/creat/";
@@ -88,11 +69,18 @@ public class CreatorController {
         return "/creator/edit";
     }
 
-    @PatchMapping(value = "/{id}")
-    public String update(@ModelAttribute("user") User user,
-                         @RequestParam(value = "roles", required = false) String[] role) {
+    @PatchMapping("/admin/{id}")
+    public String update(@ModelAttribute("user") @Valid User user,
+                         @PathVariable("id") Integer id, @RequestParam("chooseRole") String[] selectedRole) {
 
-        userService.update(user, role);
-        return "redirect:/creator/users";
+        for (String role : selectedRole) {
+            if (role.contains("USER")) {
+                user.getRoles().add(roleService.getUserRole());
+            } else if (role.contains("ADMIN")) {
+                user.getRoles().add(roleService.getAdminRole());
+            }
+        }
+        userService.updateUser(id, user);
+        return "redirect:/creat";
     }
 }

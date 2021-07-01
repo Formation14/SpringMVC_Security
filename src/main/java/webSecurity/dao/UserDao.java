@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserDao {
     User getUserByName(String name);
     Role showRole(int id);
-    void update(User user, String[] role);
+    void update(Integer id, User user);
     List<User> getAllUsers();
     User getUser(int id);
     void addUser(User user);
