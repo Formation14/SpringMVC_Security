@@ -7,7 +7,7 @@
 <body>
 <p>Create new user</p>
 <br/>
-<form th:method="POST" th:action="@{/}" th:object="${user}">
+<form th:method="POST" th:action="@{/creat}" th:object="${user}">
   <label for="name">Enter name: </label>
   <input type="text" th:field="*{name}" id="name" />
   <br/>
@@ -19,12 +19,13 @@
   <label for="email">Enter email: </label>
   <input type="text" th:field="*{email}" id="email" />
   <br/>
-  <label>Role:
-    <select multiple size="2" name="chooseRole">
-      <option th:each="role : ${roles}" th:value="${role.getRole()}"
-              th:text="${role.getAuthority() == 'ADMIN'} ? 'ADMIN' : 'USER'"></option>
-    </select>
-    <br/>
+  <label for="ChooseRole">Choose role: </label>
+  <select multiple id="ChooseRole" name="ChooseRole">
+    <option th:each="role : ${roles}" th:value="${role}"
+            th:text="${role.getRole()}">role
+    </option>
+  </select>
+  <br/>
     <input type="submit" value="Create!"/>
   </label>
 </form>

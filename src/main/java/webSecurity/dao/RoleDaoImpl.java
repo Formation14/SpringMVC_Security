@@ -56,7 +56,7 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public void setUserRoleDefault() {
         Role userRole = new Role();
-        userRole.setRole("SER");
+        userRole.setRole("USER");
         entityManager.persist(userRole);
     }
 

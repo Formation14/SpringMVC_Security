@@ -16,7 +16,7 @@ public class Role implements GrantedAuthority{
 
     private String role;
 
-    @ManyToMany(mappedBy = "rolesSet")
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
     public Role() {
@@ -52,6 +52,6 @@ public class Role implements GrantedAuthority{
 
     @Override
     public String getAuthority() {
-        return getRole();
+        return role;
     }
 }

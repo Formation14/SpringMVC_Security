@@ -24,13 +24,20 @@ public class User implements UserDetails {
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
+    @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> rolesSet = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
 
+    }
+
+    public User(String name, String password, String email, Set<Role> roles) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
     }
 
     public int getId() {
@@ -67,11 +74,11 @@ public class User implements UserDetails {
     }
 
     public Set<Role> getRoles() {
-        return rolesSet;
+        return roles;
     }
 
     public void setRoles(Set<Role> roles) {
-        this.rolesSet = roles;
+        this.roles = roles;
     }
 
     @Override
@@ -84,14 +91,14 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return roles;
     }
 
 
 
     @Override
     public String getUsername() {
-        return getName();
+        return name;
     }
 
     @Override
@@ -111,6 +118,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return false;
     }
 }

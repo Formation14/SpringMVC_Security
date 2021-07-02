@@ -18,5 +18,7 @@ public interface RoleService {
 
     void setAdminRole();
 
-    public List<Role> getAllDefRoles();
+    void setRolesDefault();
+
+    List<Role> getAllDefRoles();
 }

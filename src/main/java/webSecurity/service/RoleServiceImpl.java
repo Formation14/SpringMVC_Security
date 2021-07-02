@@ -14,8 +14,6 @@ import java.util.Set;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private static final String ADMINROLE = "ADMIN";
-    private static final String USSERROLE = "USER";
     @Autowired
     private RoleDao roleDao;
 
@@ -53,6 +51,11 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public void setAdminRole() {
         roleDao.setAdminRoleDefault();
+    }
+    @Override
+    public void setRolesDefault() {
+        roleDao.setAdminRoleDefault();
+        roleDao.setUserRoleDefault();
     }
 
     @Override

@@ -55,9 +55,10 @@ public class UserDaoImpl implements UserDao {
         entityManager.persist(user);
     }
 
+
     @Override
-    public void deleteUser(User user) {
-        entityManager.remove(user);
+    public void deleteUser(Integer id) {
+        entityManager.remove(getUser(id));
     }
 
 }

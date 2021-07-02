@@ -3,75 +3,78 @@ package webSecurity.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import webSecurity.model.Role;
 import webSecurity.model.User;
 import webSecurity.service.RoleService;
 import webSecurity.service.UserService;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.security.Principal;
 
 @Controller
-@RequestMapping("/creat")
+@RequestMapping("/")
 public class CreatorController {
 
-    @Autowired
-    private UserService userService;
 
-    @Autowired
+    private UserService userService;
     private RoleService roleService;
 
-
-    @GetMapping()
-    public String showAllUsers(ModelMap model) {
-        List<User> list = userService.getAllUsers();
-        model.addAttribute("users", list);
-        return "creator/users";
+    @Autowired
+    public CreatorController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
     }
 
-//    @GetMapping(value = "/")
-//    public String user() {
-//        return "user";
-//    }
-
-    @GetMapping(value = "/adduser")
-    public String addUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.getAllDefRoles());
-        return "creator/adduser";
+    @RequestMapping(value = "login", method = RequestMethod.GET)
+    public String loginPage() {
+        return "login";
     }
 
-    @PostMapping("/creat")
-    public String create(@ModelAttribute("user") @Valid User user,
-                         @RequestParam("chooseRole") String[] role) {
-        Set<Role> rol = new HashSet<>();
-        for (String s : role) {
-            if (s.equals("ADMIN")) {
-                rol.add(roleService.getAdminRole());
-            } else if (s.equals("USER")) {
-                rol.add(roleService.getUserRole());
+
+    @GetMapping("/admin")
+    public String allUsers(Model model) {
+        model.addAttribute("people", userService.getAllUsers());
+        return "admin/users";
+    }
+
+    @GetMapping("/admin/adduser")
+    public String newUser(@ModelAttribute("user") User user, Model model) {
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "admin/adduser";
+    }
+
+    @PostMapping("/admin")
+    public String create(@ModelAttribute("user") @Valid User user, @RequestParam("selectedRole") String[] selectedRole,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "admin/adduser";
+
+        for (String role : selectedRole
+        ) {
+            if (role.contains("ROLE_USER")) {
+                user.getRoles().add(roleService.getUserRole());
+            } else if (role.contains("ROLE_ADMIN")) {
+                user.getRoles().add(roleService.getAdminRole());
             }
         }
-        user.setRoles(rol);
         userService.addUser(user);
-        return "redirect:/creat/";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/creat/{id}/edit")
-    public String edit(@PathVariable("id") Integer id, ModelMap modelMap) {
-        modelMap.addAttribute("user", userService.getUser(id));
-        modelMap.addAttribute("roles", roleService.getAllRoles());
-        return "/creator/edit";
+    @GetMapping("/admin/{id}/edit")
+    public String edit(Model model, @PathVariable("id") Integer id) {
+        model.addAttribute("user", userService.getUser(id));
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "admin/edit";
     }
 
     @PatchMapping("/admin/{id}")
-    public String update(@ModelAttribute("user") @Valid User user,
-                         @PathVariable("id") Integer id, @RequestParam("chooseRole") String[] selectedRole) {
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                         @PathVariable("id") Integer id,
+                         @RequestParam("selectedRole") String[] selectedRole) {
+        if (bindingResult.hasErrors())
+            return "admin/edit";
 
         for (String role : selectedRole) {
             if (role.contains("USER")) {
@@ -81,6 +84,35 @@ public class CreatorController {
             }
         }
         userService.updateUser(id, user);
-        return "redirect:/creat";
+        return "redirect:/admin";
+    }
+
+    @DeleteMapping("/admin/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+        userService.deleteUser(id);
+        return "redirect:/admin";
+    }
+
+    //Создаем пользователей по умолчанию admin, user
+    @GetMapping("/creatDefaultUsers")
+    public String creatDefaultUsers() {
+        roleService.setRolesDefault();
+
+        User admin = new User();
+        admin.setEmail("admin@email.com");
+        admin.setName("admin");
+        admin.setPassword("admin");
+        admin.getRoles().add(roleService.getAdminRole());
+
+        userService.addUser(admin);
+
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/user/show")
+    public String showUserByIdForUser(Principal principal, Model model) {
+        User user = userService.loadUserByUsername(principal);
+        model.addAttribute("user", user);
+        return "user/showUser";
     }
 }
