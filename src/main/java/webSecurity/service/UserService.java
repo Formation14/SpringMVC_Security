@@ -1,16 +1,21 @@
 package webSecurity.service;
 
+import webSecurity.models.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import webSecurity.model.User;
 
 import java.security.Principal;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    List<User> getAllUsers();
-    User getUser(int id);
     void addUser(User user);
-    void deleteUser(Integer id);
-    void updateUser(Integer id, User user);
+
+    List<User> getAllUsers();
+
+    void deleteUser(Long id);
+
+    void updateUser(Long id, User updatedUser);
+
+    User getUserById(Long id);
+
     User loadUserByUsername(Principal principal);
 }

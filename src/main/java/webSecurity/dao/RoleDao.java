@@ -1,6 +1,6 @@
 package webSecurity.dao;
 
-import webSecurity.model.Role;
+import webSecurity.models.Role;
 
 import java.util.List;
 import java.util.Set;
@@ -8,7 +8,7 @@ import java.util.Set;
 public interface RoleDao {
     Set<Role> getRoleSet(Set<String> role);
 
-    Role getUserRole();
+    Role getDefaultRole();
 
     Role getRoleByName(String name);
 
@@ -18,5 +18,5 @@ public interface RoleDao {
 
     void setUserRoleDefault();
 
-    List<Role> getAllRoles();
+    List<Role> listAllRoles();
 }

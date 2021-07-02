@@ -1,24 +1,19 @@
 package webSecurity.service;
 
-import webSecurity.model.Role;
+import webSecurity.models.Role;
 
 import java.util.List;
 import java.util.Set;
 
 public interface RoleService {
+
     List<Role> getAllRoles();
 
-    Set<Role> getSetRoles(Set<String> roles);
+    Set<Role> getRoleSet(Set<String> roles);
 
-    Role getUserRole();
+    Role getDefaultRole();
 
     Role getAdminRole();
 
-    void setUserRole();
-
-    void setAdminRole();
-
     void setRolesDefault();
-
-    List<Role> getAllDefRoles();
 }
