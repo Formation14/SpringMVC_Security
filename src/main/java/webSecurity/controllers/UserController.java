@@ -1,5 +1,6 @@
 package webSecurity.controllers;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import webSecurity.models.User;
 import webSecurity.service.RoleService;
 import webSecurity.service.UserService;
@@ -20,45 +21,30 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
-public class PeopleController {
+public class UserController {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private RoleService roleService;
 
     @Autowired
-    public PeopleController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    @RequestMapping(value = "hello", method = RequestMethod.GET)
-    public String printWelcome(Principal principal, ModelMap model) {
-// чтобы посмотреть аутентифицированного пользователя через дебаггер
-        String str = "You are anonymous";
-        if (principal != null) {
-            Authentication a = SecurityContextHolder.getContext().getAuthentication();
-            str = "You are logged in as a user: " + principal.getName();
-        }
-        List<String> messages = new ArrayList<>();
-        messages.add("Hello!");
-        messages.add(str);
-        messages.add("I'm Spring MVC-SECURITY application");
-        messages.add("5.2.0 version by sep'19 ");
-        model.addAttribute("messages", messages);
-        return "hello";
-    }
+    
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String loginPage() {
         return "login";
     }
 
-
-    //Из 2.3.1
+    
     @GetMapping("/admin")
     public String index(Model model) {
-        model.addAttribute("people", userService.getAllUsers());
-        return "admin/index";
+        model.addAttribute("users", userService.getAllUsers());
+        return "admin/users";
     }
 
     @GetMapping("/admin/new")
@@ -68,19 +54,16 @@ public class PeopleController {
     }
 
     @PostMapping("/admin")
-    public String create(@ModelAttribute("user") @Valid User user, @RequestParam("selectedRole") String[] selectedRole,
-                         BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors())
-            return "admin/new";
+    public String create(@ModelAttribute("user") @Valid User user, @RequestParam("chooseRole") String[] chooseRole) {
 
-        for (String role : selectedRole
-        ) {
+        for (String role : chooseRole) {
             if (role.contains("ROLE_USER")) {
                 user.getRoleSet().add(roleService.getDefaultRole());
             } else if (role.contains("ROLE_ADMIN")) {
                 user.getRoleSet().add(roleService.getAdminRole());
             }
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.addUser(user);
         return "redirect:/admin";
     }
@@ -94,18 +77,17 @@ public class PeopleController {
 
     @PatchMapping("/admin/{id}")
     public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                         @PathVariable("id") Long id, @RequestParam("selectedRole") String[] selectedRole) {
+                         @PathVariable("id") Long id, @RequestParam("chooseRole") String[] chooseRole) {
         if (bindingResult.hasErrors())
             return "admin/edit";
 
-        for (String role : selectedRole) {
+        for (String role : chooseRole) {
             if (role.contains("ROLE_USER")) {
                 user.getRoleSet().add(roleService.getDefaultRole());
             } else if (role.contains("ROLE_ADMIN")) {
                 user.getRoleSet().add(roleService.getAdminRole());
             }
         }
-        userService.updateUser(id, user);
         return "redirect:/admin";
     }
 
@@ -116,16 +98,16 @@ public class PeopleController {
     }
 
     //Создаем пользователей по умолчанию admin, user
-    @GetMapping("/creatDefaultUsers")
+    @GetMapping("/creat")
     public String creatDefaultUsers() {
 
         roleService.setRolesDefault();
 
         User admin = new User();
-        admin.setAge(33);
-        admin.setEmail("admin@email.com");
+        admin.setAge(26);
+        admin.setEmail("paveltis@tut.by");
         admin.setName("admin");
-        admin.setPassword("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
         admin.getRoleSet().add(roleService.getAdminRole());
 
         userService.addUser(admin);

@@ -11,6 +11,8 @@
 <p th:text="${'Email: ' + user.getEmail()}">VALUE</p>
 <p th:text="'UserID: ' + ${user.getId()}">VALUE</p>
 <br>
-<a href="/logout">Logout</a>
+<form th:action="@{/logout}">
+    <input type="submit" value="LOGOUT"/>
+</form>
 </body>
 </html>
