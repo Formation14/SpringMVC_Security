@@ -13,8 +13,8 @@ import java.util.Set;
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
-    final private String defaultRoleName = "ROLE_USER";
-    final private String adminRoleName = "ROLE_ADMIN";
+    final static private String ROLE_USER = "ROLE_USER";
+    final static private String ROLE_ADMIN = "ROLE_ADMIN";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -28,7 +28,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Role getDefaultRole() {
-        return getRoleByName(defaultRoleName);
+        return getRoleByName(ROLE_USER);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Role getAdminRole() {
-        return getRoleByName(adminRoleName);
+        return getRoleByName(ROLE_ADMIN);
     }
 
     @Override
@@ -62,7 +62,6 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public List<Role> listAllRoles() {
-        return  entityManager.createQuery("from Role", Role.class
-        ).getResultList();
+        return  entityManager.createQuery("from Role", Role.class).getResultList();
     }
 }

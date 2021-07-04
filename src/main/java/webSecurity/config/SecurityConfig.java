@@ -2,8 +2,6 @@ package webSecurity.config;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import webSecurity.config.handler.LoginSuccessHandler;
-import webSecurity.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
