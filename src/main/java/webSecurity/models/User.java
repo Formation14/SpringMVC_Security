@@ -35,19 +35,19 @@ public class User implements UserDetails {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roleSet = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
 
-    public User(Long id, String name, int age, String email, String password, Set<Role> roleSet) {
+    public User(Long id, String name, int age, String email, String password, Set<Role> roles) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
         this.password = password;
-        this.roleSet = roleSet;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -91,11 +91,11 @@ public class User implements UserDetails {
     }
 
     public Set<Role> getRoleSet() {
-        return roleSet;
+        return roles;
     }
 
     public void setRoleSet(Set<Role> roleSet) {
-        this.roleSet = roleSet;
+        this.roles = roleSet;
     }
 
     @Override

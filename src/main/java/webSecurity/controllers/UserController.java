@@ -23,8 +23,8 @@ import java.util.List;
 @RequestMapping("/")
 public class UserController {
 
-    private final UserService userService;
-    private final RoleService roleService;
+    private  UserService userService;
+    private  RoleService roleService;
 
     @Autowired
     public UserController(UserService userService, RoleService roleService) {

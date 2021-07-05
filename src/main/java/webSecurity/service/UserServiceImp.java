@@ -19,12 +19,10 @@ import java.util.List;
 public class UserServiceImp implements UserService {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
     private final RoleService roleService;
 
     @Autowired
-    public UserServiceImp(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
+    public UserServiceImp(RoleService roleService, PasswordEncoder passwordEncoder) {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -80,13 +78,15 @@ public class UserServiceImp implements UserService {
         return user;
     }
 
+    @Override
     public void creatDefaultUser() {
+        roleService.setRolesDefault();
         User admin = new User();
         admin.setAge(26);
         admin.setEmail("paveltis@tut.by");
         admin.setName("admin");
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.getRoleSet().add(roleService.getAdminRole());
-        userService.addUser(admin);
+        userDao.save(admin);
     }
 }

@@ -3,8 +3,6 @@ package webSecurity.models;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
