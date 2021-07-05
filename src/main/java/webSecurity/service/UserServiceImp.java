@@ -63,6 +63,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User loadUserByUsername(Principal principal) throws UsernameNotFoundException {
         return userDao.getUserByName(principal.getName());
     }
