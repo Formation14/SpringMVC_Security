@@ -23,15 +23,13 @@ import java.util.List;
 @RequestMapping("/")
 public class UserController {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-    private RoleService roleService;
+    private final RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
     }
     
 
@@ -54,16 +52,10 @@ public class UserController {
     }
 
     @PostMapping("/admin")
-    public String create(@ModelAttribute("user") @Valid User user, @RequestParam("chooseRole") String[] chooseRole) {
+    public String create(@ModelAttribute("user") @Valid User user,
+                         @RequestParam("chooseRole") String[] chooseRole) {
 
-        for (String role : chooseRole) {
-            if (role.contains("ROLE_USER")) {
-                user.getRoleSet().add(roleService.getDefaultRole());
-            } else if (role.contains("ROLE_ADMIN")) {
-                user.getRoleSet().add(roleService.getAdminRole());
-            }
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userService.chooseRole(user,chooseRole);
         userService.addUser(user);
         return "redirect:/admin";
     }
@@ -76,18 +68,12 @@ public class UserController {
     }
 
     @PatchMapping("/admin/{id}")
-    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                         @PathVariable("id") Long id, @RequestParam("chooseRole") String[] chooseRole) {
-        if (bindingResult.hasErrors())
-            return "admin/edit";
+    public String update(@ModelAttribute("user") @Valid User user,
+                         @PathVariable("id") Long id,
+                         @RequestParam("chooseRole") String[] chooseRole) {
 
-        for (String role : chooseRole) {
-            if (role.contains("ROLE_USER")) {
-                user.getRoleSet().add(roleService.getDefaultRole());
-            } else if (role.contains("ROLE_ADMIN")) {
-                user.getRoleSet().add(roleService.getAdminRole());
-            }
-        }
+        userService.chooseRole(user,chooseRole);
+        userService.updateUser(id,user);
         return "redirect:/admin";
     }
 
@@ -97,22 +83,10 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    //Создаем пользователей по умолчанию admin, user
     @GetMapping("/creat")
     public String creatDefaultUsers() {
-
-        roleService.setRolesDefault();
-
-        User admin = new User();
-        admin.setAge(26);
-        admin.setEmail("paveltis@tut.by");
-        admin.setName("admin");
-        admin.setPassword(passwordEncoder.encode("admin"));
-        admin.getRoleSet().add(roleService.getAdminRole());
-
-        userService.addUser(admin);
-
-        return "redirect:/admin";
+       userService.creatDefaultUser();
+       return "redirect:/admin";
     }
 
     @GetMapping("/user/show")

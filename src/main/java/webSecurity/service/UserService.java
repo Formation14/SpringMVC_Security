@@ -18,4 +18,8 @@ public interface UserService extends UserDetailsService {
     User getUserById(Long id);
 
     User loadUserByUsername(Principal principal);
+
+    void creatDefaultUser();
+
+    User chooseRole(User user, String[] chooseRole);
 }

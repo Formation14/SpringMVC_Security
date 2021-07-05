@@ -1,5 +1,6 @@
 package webSecurity.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import webSecurity.dao.UserDAO;
 import webSecurity.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,17 @@ import java.util.List;
 @Transactional()
 public class UserServiceImp implements UserService {
 
-    @Qualifier("userDAOImp")
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final RoleService roleService;
+
+    @Autowired
+    public UserServiceImp(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Autowired
     private UserDAO userDao;
 
@@ -33,6 +44,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void addUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.save(user);
     }
 
@@ -48,13 +60,32 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.getUserByName(username);
-        return user;
+        return userDao.getUserByName(username);
     }
 
     @Override
     public User loadUserByUsername(Principal principal) throws UsernameNotFoundException {
-        User user = userDao.getUserByName(principal.getName());
+        return userDao.getUserByName(principal.getName());
+    }
+
+    public User chooseRole(User user, String[] chooseRole){
+        for (String role : chooseRole) {
+            if (role.contains("ROLE_USER")) {
+                user.getRoleSet().add(roleService.getDefaultRole());
+            } else if (role.contains("ROLE_ADMIN")) {
+                user.getRoleSet().add(roleService.getAdminRole());
+            }
+        }
         return user;
+    }
+
+    public void creatDefaultUser() {
+        User admin = new User();
+        admin.setAge(26);
+        admin.setEmail("paveltis@tut.by");
+        admin.setName("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.getRoleSet().add(roleService.getAdminRole());
+        userService.addUser(admin);
     }
 }
