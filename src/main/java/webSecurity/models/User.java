@@ -127,6 +127,15 @@ public class User implements UserDetails {
                 ", email = " + email + "]";
     }
 
+    public static UserDetails fromUser(User user) {
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),user.getPassword(),
+                user.isAccountNonExpired(), user.isCredentialsNonExpired(),
+                user.isEnabled(), user.isAccountNonLocked(),
+                user.getRoleSet()
+        );
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoleSet();

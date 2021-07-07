@@ -2,6 +2,7 @@ package webSecurity.config;
 
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import webSecurity.config.security.SecurityConfig;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -10,8 +11,8 @@ import javax.servlet.ServletException;
 public class AppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{
-                WebConfig.class
+        return new Class<?>[]{SecurityConfig.class,
+                HibernateConfig.class
         };
     }
 

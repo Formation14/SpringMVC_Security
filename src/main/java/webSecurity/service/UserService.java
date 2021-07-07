@@ -17,7 +17,7 @@ public interface UserService extends UserDetailsService {
 
     User getUserById(Long id);
 
-    User loadUserByUsername(Principal principal);
+    User getUserByName(Principal principal);
 
     void creatDefaultUser();
 

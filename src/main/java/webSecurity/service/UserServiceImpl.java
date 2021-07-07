@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.List;
 
-@Service
+@Service("userDetailsServiceImpl")
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService , UserDetailsService{
 
     private final UserDAO userDao;
     private final PasswordEncoder passwordEncoder;
@@ -56,14 +56,11 @@ public class UserServiceImpl implements UserService {
         userDao.delete(id);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDao.getUserByName(username);
-    }
+
 
     @Override
     @Transactional(readOnly = true)
-    public User loadUserByUsername(Principal principal) throws UsernameNotFoundException {
+    public User getUserByName(Principal principal) throws UsernameNotFoundException {
         return userDao.getUserByName(principal.getName());
     }
 
@@ -88,5 +85,15 @@ public class UserServiceImpl implements UserService {
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.getRoleSet().add(roleService.getAdminRole());
         userDao.save(admin);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = userDao.getUserByName(s);
+        if (user == null) {
+            throw new UsernameNotFoundException(
+                    "No user found with username: "+ s);
+        }
+        return User.fromUser(user);
     }
 }
