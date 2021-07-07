@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="webSecurity:war exploded">
-    <output-path>$PROJECT_DIR$/target/2.3.1_create_CRUD_application</output-path>
+    <output-path>$PROJECT_DIR$/target/SpringMVC_Security</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
@@ -63,7 +63,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/2.3.1_create_CRUD_application/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/SpringMVC_Security/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="webSecurity/web/Web" />
     </root>

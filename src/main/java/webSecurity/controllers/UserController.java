@@ -1,44 +1,37 @@
 package webSecurity.controllers;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import webSecurity.models.User;
 import webSecurity.service.RoleService;
 import webSecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Controller
 @RequestMapping("/")
 public class UserController {
 
-    private  UserService userService;
-    private  RoleService roleService;
+    private UserService userService;
+    private RoleService roleService;
 
     @Autowired
     public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
-    
+
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String loginPage() {
         return "login";
     }
 
-    
+
     @GetMapping("/admin")
     public String index(Model model) {
         model.addAttribute("users", userService.getAllUsers());
@@ -55,7 +48,7 @@ public class UserController {
     public String create(@ModelAttribute("user") @Valid User user,
                          @RequestParam("chooseRole") String[] chooseRole) {
 
-        userService.chooseRole(user,chooseRole);
+        userService.chooseRole(user, chooseRole);
         userService.addUser(user);
         return "redirect:/admin";
     }
@@ -72,8 +65,8 @@ public class UserController {
                          @PathVariable("id") Long id,
                          @RequestParam("chooseRole") String[] chooseRole) {
 
-        userService.chooseRole(user,chooseRole);
-        userService.updateUser(id,user);
+        userService.chooseRole(user, chooseRole);
+        userService.updateUser(id, user);
         return "redirect:/admin";
     }
 
@@ -85,8 +78,8 @@ public class UserController {
 
     @GetMapping("/creat")
     public String creatDefaultUsers() {
-       userService.creatDefaultUser();
-       return "redirect:/admin";
+        userService.creatDefaultUser();
+        return "redirect:/admin";
     }
 
     @GetMapping("/user/show")

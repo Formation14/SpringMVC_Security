@@ -1,4 +1,4 @@
-package webSecurity.config.handler;
+package webSecurity.config.security.handler;
 
 
 import org.springframework.security.core.Authentication;
@@ -16,14 +16,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
 
         String role = authentication.getAuthorities().toString();
-
-        if(role.contains("ROLE_ADMIN")){
+        if (role.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");
-        }
-        else if(role.contains("ROLE_USER")){
+        } else if (role.contains("ROLE_USER")) {
             httpServletResponse.sendRedirect("/user/show");
         }
     }

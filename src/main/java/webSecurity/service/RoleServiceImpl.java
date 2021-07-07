@@ -13,7 +13,7 @@ import java.util.Set;
 @Transactional
 public class RoleServiceImpl implements RoleService {
 
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
     @Autowired
     public RoleServiceImpl(RoleDao roleDao) {

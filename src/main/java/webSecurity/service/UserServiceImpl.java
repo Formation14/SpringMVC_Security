@@ -1,5 +1,6 @@
 package webSecurity.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import webSecurity.dao.UserDAO;
 import webSecurity.models.User;
@@ -15,20 +16,18 @@ import java.security.Principal;
 import java.util.List;
 
 @Service
-@Transactional()
-public class UserServiceImp implements UserService {
+@Transactional
+public class UserServiceImpl implements UserService {
 
+    private final UserDAO userDao;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    @Autowired
-    public UserServiceImp(RoleService roleService, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(RoleService roleService, PasswordEncoder passwordEncoder, UserDAO userDao) {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.userDao = userDao;
     }
-
-    @Autowired
-    private UserDAO userDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -68,7 +67,7 @@ public class UserServiceImp implements UserService {
         return userDao.getUserByName(principal.getName());
     }
 
-    public User chooseRole(User user, String[] chooseRole){
+    public User chooseRole(User user, String[] chooseRole) {
         for (String role : chooseRole) {
             if (role.contains("ROLE_USER")) {
                 user.getRoleSet().add(roleService.getDefaultRole());

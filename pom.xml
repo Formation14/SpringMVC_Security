@@ -132,7 +132,7 @@
     </dependencies>
 
     <build>
-        <finalName>2.3.1_create_CRUD_application</finalName>
+        <finalName>SpringMVC_Security</finalName>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <plugin>

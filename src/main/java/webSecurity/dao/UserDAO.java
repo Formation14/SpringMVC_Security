@@ -5,6 +5,7 @@ import webSecurity.models.User;
 import java.util.List;
 
 public interface UserDAO {
+
     List<User> listAllPeople();
 
     User getUserById(Long id);

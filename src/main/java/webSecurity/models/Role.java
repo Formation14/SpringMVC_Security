@@ -11,9 +11,9 @@ import java.util.Set;
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue
+    private Long id;
 
-    Long id;
-    String name;
+    private String name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> userSet = new HashSet<>();
@@ -27,23 +27,6 @@ public class Role implements GrantedAuthority {
     }
 
     public Role() {
-    }
-
-    public Role(Long id) {
-        this.id = id;
-    }
-
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getRole_id() {
-        return id;
-    }
-
-    public void setRole_id(Long role_id) {
-        this.id = role_id;
     }
 
     public String getName() {

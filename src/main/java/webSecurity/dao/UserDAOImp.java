@@ -2,7 +2,6 @@ package webSecurity.dao;
 
 import webSecurity.models.User;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -17,15 +16,12 @@ public class UserDAOImp implements UserDAO {
 
     @Override
     public List<User> listAllPeople() {
-        return entityManager.createQuery("from User", User.class
-        ).getResultList();
+        return entityManager.createQuery("from User", User.class).getResultList();
     }
 
     @Override
     public User getUserById(Long id) {
-        TypedQuery<User> q = entityManager.createQuery(
-                "select user from User user where user.id = :id", User.class
-        );
+        TypedQuery<User> q = entityManager.createQuery("select u from User u where u.id = :id", User.class);
         q.setParameter("id", id);
         return q.getResultList().stream().findAny().orElse(null);
     }
@@ -33,7 +29,6 @@ public class UserDAOImp implements UserDAO {
     @Override
     public void save(User user) {
         entityManager.persist(user);
-
     }
 
     @Override
@@ -48,8 +43,8 @@ public class UserDAOImp implements UserDAO {
 
     @Override
     public User getUserByName(String name) {
-        return entityManager.createQuery("SELECT u FROM User u WHERE u.name = :userName", User.class)
-                .setParameter("userName", name)
+        return entityManager.createQuery("SELECT u FROM User u WHERE u.name = :name", User.class)
+                .setParameter("name", name)
                 .setMaxResults(1)
                 .getSingleResult();
     }
