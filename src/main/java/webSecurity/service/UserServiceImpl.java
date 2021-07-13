@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService , UserDetailsService{
 
     @Override
     public void updateUser(Long id, User updatedUser) {
+        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         userDao.update(id, updatedUser);
     }
 
@@ -91,8 +92,7 @@ public class UserServiceImpl implements UserService , UserDetailsService{
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userDao.getUserByName(s);
         if (user == null) {
-            throw new UsernameNotFoundException(
-                    "No user found with username: "+ s);
+            throw new UsernameNotFoundException("No user found with username: "+ s);
         }
         return User.fromUser(user);
     }

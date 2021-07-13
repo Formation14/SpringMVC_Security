@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Objects;
+import java.util.Properties;
 
 
 @Configuration
@@ -42,12 +43,13 @@ public class HibernateConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQL8Dialect");
-        vendorAdapter.setShowSql(true);
-        LocalContainerEntityManagerFactoryBean factory =
-                new LocalContainerEntityManagerFactoryBean();
+        vendorAdapter.setDatabasePlatform(env.getProperty("hibernate.dialect"));
+        vendorAdapter.setShowSql(Boolean.parseBoolean(env.getProperty("hibernate.show_sql")));
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
+        Properties prop = new Properties();
+        prop.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+        factory.setJpaProperties(prop);
         factory.setDataSource(dataSource());
         factory.setPackagesToScan(new String[]{"webSecurity.models"});
         return factory;
