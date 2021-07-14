@@ -27,7 +27,7 @@ import java.util.Properties;
 public class HibernateConfig {
 
     @Resource
-    Environment env;
+    private Environment env;
 
     @Bean
     public DataSource dataSource() {
